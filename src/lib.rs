@@ -20,8 +20,8 @@ pub struct Universe {
 #[wasm_bindgen]
 impl Universe {
     pub fn new() -> Universe {
-        let width = 128;
-        let height = 128;
+        let width = 96;
+        let height = 96;
         let mut cells = FixedBitSet::with_capacity(width * height);
 
         for i in 0..width * height {
