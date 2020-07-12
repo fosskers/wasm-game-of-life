@@ -15,6 +15,12 @@ canvas.height = (CELL_SIZE + 1) * height + 1;
 canvas.width = (CELL_SIZE + 1) * width + 1;
 const ctx = canvas.getContext("2d");
 
+const bitIsSet = (n, arr) => {
+    const byte = Math.floor(n / 8);
+    const mask = 1 << (n % 8);
+    return (arr[byte] & mask) === mask;
+};
+
 const drawGrid = () => {
     ctx.beginPath();
     ctx.strokeStyle = GRID_COLOUR;
@@ -40,7 +46,7 @@ const getIndex = (row, column) => {
 
 const drawCells = () => {
     const cellsPtr = universe.cells();
-    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height / 8);
 
     ctx.beginPath();
 
@@ -48,7 +54,7 @@ const drawCells = () => {
         for (let col = 0; col < width; col++) {
             const idx = getIndex(row, col);
 
-            ctx.fillStyle = cells[idx] === Cell.Dead ? DEAD_COLOUR : ALIVE_COLOUR;
+            ctx.fillStyle = bitIsSet(idx, cells) ? ALIVE_COLOUR : DEAD_COLOUR;
 
             ctx.fillRect(
                 col * (CELL_SIZE + 1) + 1,
