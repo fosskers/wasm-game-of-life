@@ -127,6 +127,12 @@ impl Universe {
 
         count
     }
+
+    /// Flip the state of the cell at the given coordinates.
+    pub fn toggle_cell(&mut self, row: u32, col: u32) {
+        let idx = self.get_index(row, col);
+        self.cells.set(idx, !self.cells[idx]);
+    }
 }
 
 impl Universe {
