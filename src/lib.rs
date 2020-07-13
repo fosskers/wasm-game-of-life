@@ -30,8 +30,8 @@ impl Universe {
         // To enable the output of Rust panics within a browser console.
         // utils::set_panic_hook();
 
-        let width = 96;
-        let height = 96;
+        let width = 256;
+        let height = 256;
         let mut cells = FixedBitSet::with_capacity(width * height);
 
         for i in 0..width * height {
