@@ -3,6 +3,13 @@ mod utils;
 use fixedbitset::FixedBitSet;
 use js_sys::Math;
 use wasm_bindgen::prelude::*;
+// use web_sys;
+
+// macro_rules! log {
+//     ( $( $t:tt )* ) => {
+//         web_sys::console::log_1(&format!( $( $t )* ).into());
+//     }
+// }
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -20,6 +27,9 @@ pub struct Universe {
 #[wasm_bindgen]
 impl Universe {
     pub fn new() -> Universe {
+        // To enable the output of Rust panics within a browser console.
+        // utils::set_panic_hook();
+
         let width = 96;
         let height = 96;
         let mut cells = FixedBitSet::with_capacity(width * height);
@@ -74,10 +84,19 @@ impl Universe {
                 next.set(
                     idx,
                     match (cell, live_neighbours) {
-                        (true, x) if x < 2 => false,
+                        (true, x) if x < 2 => {
+                            // log!("({}, {}) died of starvation.", row, col);
+                            false
+                        }
                         (true, 2) | (true, 3) => true,
-                        (true, x) if x > 3 => false,
-                        (false, 3) => true,
+                        (true, x) if x > 3 => {
+                            // log!("({}, {}) died of overpopulation.", row, col);
+                            false
+                        }
+                        (false, 3) => {
+                            // log!("({}, {}) has been born!", row, col);
+                            true
+                        }
                         (otherwise, _) => otherwise,
                     },
                 );
@@ -89,6 +108,7 @@ impl Universe {
 
     fn get_index(&self, row: u32, column: u32) -> usize {
         (row * self.width + column) as usize
+        // (row * self.width * column) as usize
     }
 
     fn live_neighbour_count(&self, row: u32, column: u32) -> u8 {
