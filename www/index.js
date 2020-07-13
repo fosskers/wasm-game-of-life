@@ -6,7 +6,7 @@ const GRID_COLOUR = "#CCCCCC";
 const DEAD_COLOUR = "#FFFFFF";
 const ALIVE_COLOUR = "#000000";
 
-const universe = Universe.new();
+let universe = Universe.new();
 const width = universe.width();
 const height = universe.height();
 
@@ -102,6 +102,12 @@ playPauseButton.addEventListener("click", event => {
     } else {
         pause();
     }
+});
+
+const resetButton = document.getElementById("reset-universe");
+
+resetButton.addEventListener("click", event => {
+    universe = Universe.new();
 });
 
 canvas.addEventListener("click", event => {
