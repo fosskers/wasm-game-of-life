@@ -68,15 +68,42 @@ const drawCells = () => {
     ctx.stroke();
 };
 
+let animationId = null;
+
 const renderLoop = () => {
     universe.tick();
 
     drawGrid();
     drawCells();
 
-    requestAnimationFrame(renderLoop);
+    animationId = requestAnimationFrame(renderLoop);
 };
+
+const isPaused = () => {
+    return animationId === null;
+};
+
+const playPauseButton = document.getElementById("play-pause");
+
+const play = () => {
+    playPauseButton.textContent = "Pause";
+    renderLoop();
+};
+
+const pause = () => {
+    playPauseButton.textContent = "Play";
+    cancelAnimationFrame(animationId);
+    animationId = null;
+};
+
+playPauseButton.addEventListener("click", event => {
+    if (isPaused()) {
+        play();
+    } else {
+        pause();
+    }
+});
 
 drawGrid();
 drawCells();
-requestAnimationFrame(renderLoop);
+play();
